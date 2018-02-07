@@ -3,19 +3,11 @@ from sanic.response import json
 from sanic.exceptions import ServerError
 import logging
 
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.FileHandler('log/koala.error'))
-logger.setLevel(logging.INFO)
+logging.basicConfig(filename='log/koala.log', level=logging.INFO)
 
 app = Sanic()
 app.config.from_envvar('APP_SETTINGS')
 print(app.config)
-
-
-async def notify_server_started_after_five_seconds():
-    print('Server successfully started!')
-
-app.add_task(notify_server_started_after_five_seconds())
 
 
 @app.listener('before_server_start')
@@ -63,10 +55,6 @@ async def order_by_date(request, date, page):
     return json({"hello": "3"})
 
 
-@app.exception(ServerError)
-async def internal_error(request, exception):
-    logger.error(exception)
-
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, workers=4)
+    app.run(host="0.0.0.0", port=8000, workers=app.config.WORKERS,
+            debug=app.config.DEBUG, access_log=app.config.DEBUG)

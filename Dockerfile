@@ -12,4 +12,6 @@ RUN pip3 install sanic
 
 EXPOSE 8000
 
-CMD [ "APP_SETTINGS", "config.py", "python3", "main.py" ]
+ENV APP_SETTINGS=config.py
+
+CMD ["python3", "main.py" ]

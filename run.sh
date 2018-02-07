@@ -1,0 +1,1 @@
+docker run -d -v /etc/localtime:/etc/localtime -v /var/log:/log -p 8000:8000 --restart=always --name "stat" py-koala
