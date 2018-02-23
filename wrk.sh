@@ -1,0 +1,1 @@
+wrk -t4 -c200 -d30s -H "authorization: custom-token" http://127.0.0.1:8000/ping

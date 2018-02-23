@@ -1,5 +1,6 @@
 from sanic import Sanic
 from sanic.response import json
+from sanic.response import text
 from sanic.exceptions import ServerError
 import logging
 
@@ -54,6 +55,10 @@ async def order_by_user(request, user, start, end, page):
 async def order_by_date(request, date, page):
     return json({"hello": "3"})
 
+
+@app.get("/ping")
+async def ping(request):
+    return text("pong")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, workers=app.config.WORKERS,
