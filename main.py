@@ -25,7 +25,9 @@ def init(sanic, loop):
     global db
     from motor.motor_asyncio import AsyncIOMotorClient
     mongo_uri = app.config.MONGO_URL
+    db = app.config.DB
     db = AsyncIOMotorClient(mongo_uri)['test']
+    log.debug(db)
 
 
 @app.middleware('request')
@@ -45,7 +47,8 @@ async def order_by_duration(request, start, end, page):
     to = (datetime.strptime(end, '%Y-%m-%d') - since).total_seconds()
     query = {"time": {"$gte": int(begin), "$lt": int(to)}}
     log.debug(query)
-    docs = await db.orders.find(query).skip(16*(page-1)).limit(16)
+    # docs = await db.orders.find(query).skip(16*(page-1)).limit(16)
+    docs = await db.orders.find({}).to_list(length=100)
     return json(docs)
 
 
