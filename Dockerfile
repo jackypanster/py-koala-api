@@ -9,6 +9,7 @@ COPY config.py /
 COPY main.py   /
 
 RUN pip3 install sanic
+RUN pip3 install motor
 
 EXPOSE 8000
 
