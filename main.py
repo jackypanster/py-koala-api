@@ -25,8 +25,8 @@ def init(sanic, loop):
     global db
     from motor.motor_asyncio import AsyncIOMotorClient
     mongo_uri = app.config.MONGO_URL
-    db = app.config.DB
-    db = AsyncIOMotorClient(mongo_uri)['test']
+    db_name = app.config.DB
+    db = AsyncIOMotorClient(mongo_uri)[db_name]
     log.debug(db)
 
 
