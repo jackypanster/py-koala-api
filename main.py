@@ -49,6 +49,9 @@ async def order_by_duration(request, start, end, page):
     log.debug(query)
     # docs = await db.orders.find(query).skip(16*(page-1)).limit(16)
     docs = await db.orders.find({}).to_list(length=100)
+    for doc in docs:
+        doc['id'] = str(doc['_id'])
+        del doc['_id']
     return json(docs)
 
 
