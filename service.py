@@ -16,19 +16,46 @@ class Service:
 
         docs = await self.db.orders.find(query).skip(16*(page-1)).limit(16).to_list(length=16)
         for doc in docs:
-            del doc['id']
-            del doc['name']
-            del doc['payOption']
-            del doc['milliseconds']
-            del doc['_id']
-            del doc['month']
-            del doc['status']
-            del doc['timestamp']
-            del doc['userId']
-            del doc['year']
-            del doc['time']
-            del doc['info']
-            del doc['cardNumber']
-            del doc['items']
+            if 'id' in doc.keys():
+                del doc['id']
+
+            if 'name' in doc.keys():
+                del doc['name']
+
+            if 'payOption' in doc.keys():
+                del doc['payOption']
+
+            if 'milliseconds' in doc.keys():
+                del doc['milliseconds']
+
+            if '_id' in doc.keys():
+                del doc['_id']
+
+            if 'month' in doc.keys():
+                del doc['month']
+
+            if 'status' in doc.keys():
+                del doc['status']
+
+            if 'timestamp' in doc.keys():
+                del doc['timestamp']
+
+            if 'userId' in doc.keys():
+                del doc['userId']
+
+            if 'year' in doc.keys():
+                del doc['year']
+
+            if 'time' in doc.keys():
+                del doc['time']
+
+            if 'info' in doc.keys():
+                del doc['info']
+
+            if 'cardNumber' in doc.keys():
+                del doc['cardNumber']
+
+            if 'items' in doc.keys():
+                del doc['items']
 
         return docs

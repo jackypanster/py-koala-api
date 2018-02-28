@@ -38,16 +38,16 @@ async def prevent_xss(request, response):
 @app.get("/stat/order/list/<start:string>/<end:string>/<page:int>")
 async def order_by_duration(request, start, end, page):
     docs = await service.find(start, end, page)
-    results = {}
+    result = {}
     for doc in docs:
         key = doc['date']
         val = doc['price']
-        if key in results.keys():
-            results[key] += val
+        if key in result.keys():
+            result[key] += val
         else:
-            results[key] = val
+            result[key] = val
 
-    return json(docs)
+    return json(result)
 
 
 @app.get("/orders/<user:string>/<start:string>/<end:string>/<page:int>")
