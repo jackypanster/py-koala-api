@@ -15,7 +15,9 @@ class Service:
         query = {"time": {"$gte": int(begin), "$lt": int(to)}}
         self.log.debug(query)
 
-        docs = await self.db.orders.find(query).skip(32*(page-1)).limit(32).to_list(length=32)
+        n = await self.db.orders.find(query).count()
+
+        docs = await self.db.orders.find(query).skip(128*(page-1)).limit(128).to_list(length=128)
         for doc in docs:
             if 'id' in doc.keys():
                 del doc['id']
@@ -60,4 +62,8 @@ class Service:
                 del doc['items']
 
         self.log.debug(docs)
-        return docs
+
+        return {
+            'docs': docs,
+            'count': n
+        }

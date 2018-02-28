@@ -37,17 +37,21 @@ async def prevent_xss(request, response):
 
 @app.get("/stat/order/list/<start:string>/<end:string>/<page:int>")
 async def order_by_duration(request, start, end, page):
-    docs = await service.find(start, end, page)
+    items = await service.find(start, end, page)
     result = {}
-    for doc in docs:
+    for doc in items['docs']:
         key = doc['date']
-        val = doc['price']
+        price = doc['price']
         if key in result.keys():
-            result[key] += val
+            result[key]['total'] += 1
+            result[key]['amount'] += price
         else:
-            result[key] = val
+            result[key] = {
+                'total': 1,
+                'amount': price,
+            }
 
-    return json(result)
+    return json({'page': page, 'sum': items['count'], 'items': result})
 
 
 @app.get("/orders/<user:string>/<start:string>/<end:string>/<page:int>")
