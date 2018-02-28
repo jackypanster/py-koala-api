@@ -3,18 +3,19 @@ from datetime import datetime
 
 
 class Service:
-    def __init__(self, uri, db_name):
+    def __init__(self, uri, db_name, log):
         self.client = AsyncIOMotorClient(uri)
         self.db = self.client[db_name]
+        self.log = log
 
     async def find(self, start, end, page):
         since = datetime(1970, 1, 1, 0, 0, 0)
         begin = (datetime.strptime(start, '%Y-%m-%d') - since).total_seconds()
         to = (datetime.strptime(end, '%Y-%m-%d') - since).total_seconds()
         query = {"time": {"$gte": int(begin), "$lt": int(to)}}
-        print(query)
+        self.log.debug(query)
 
-        docs = await self.db.orders.find(query).skip(16*(page-1)).limit(16).to_list(length=16)
+        docs = await self.db.orders.find(query).skip(32*(page-1)).limit(32).to_list(length=32)
         for doc in docs:
             if 'id' in doc.keys():
                 del doc['id']
@@ -58,4 +59,5 @@ class Service:
             if 'items' in doc.keys():
                 del doc['items']
 
+        self.log.debug(docs)
         return docs

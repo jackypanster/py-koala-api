@@ -22,7 +22,7 @@ log.debug(app.config)
 @app.listener('before_server_start')
 def init(sanic, loop):
     global service
-    service = Service(app.config.MONGO_URL, app.config.DB_NAME)
+    service = Service(app.config.MONGO_URL, app.config.DB_NAME, log)
 
 
 @app.middleware('request')
