@@ -1,1 +1,1 @@
-docker run -d -v /etc/localtime:/etc/localtime -v /var/log:/log -p 8000:8000 --restart=always --name "py-koala" docker.gf.com.cn/py-koala
+docker run -d -v /etc/localtime:/etc/localtime -v /var/log:/log --net="host" --restart=always --name "py-koala" docker.gf.com.cn/py-koala

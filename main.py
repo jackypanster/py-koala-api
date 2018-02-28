@@ -29,6 +29,7 @@ def init(sanic, loop):
     client = AsyncIOMotorClient(mongo_uri)
     client.admin.authenticate('rootAdmin', 'gf37888676')
     db = client[db_name]
+    db.authenticate('rootAdmin', 'gf37888676')
     log.debug(db)
 
 
