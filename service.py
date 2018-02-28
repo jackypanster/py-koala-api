@@ -26,5 +26,9 @@ class Service:
             del doc['timestamp']
             del doc['userId']
             del doc['year']
+            del doc['time']
+            del doc['info']
+            del doc['cardNumber']
+            del doc['items']
 
         return docs
