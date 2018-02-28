@@ -1,36 +1,28 @@
 from sanic import Sanic
 from sanic.response import json
 from sanic.exceptions import ServerError
-from datetime import datetime
+from service import Service
 import logging
+
+app = Sanic(__name__)
+app.config.from_envvar('APP_SETTINGS')
 
 logging_format = "[%(asctime)s] %(process)d-%(levelname)s "
 logging_format += "%(module)s::%(funcName)s():l%(lineno)d: "
 logging_format += "%(message)s"
-
 logging.basicConfig(
-    filename='log/koala.log',
+    filename=app.config.LOG_FILE,
     format=logging_format,
     level=logging.DEBUG
 )
 log = logging.getLogger()
-
-app = Sanic(__name__)
-app.config.from_envvar('APP_SETTINGS')
 log.debug(app.config)
 
 
 @app.listener('before_server_start')
 def init(sanic, loop):
-    global db
-    from motor.motor_asyncio import AsyncIOMotorClient
-    mongo_uri = app.config.MONGO_URL
-    db_name = app.config.DB
-    client = AsyncIOMotorClient(mongo_uri)
-    #client.admin.authenticate('rootAdmin', 'gf37888676')
-    db = client[db_name]
-    #db.authenticate('rootAdmin', 'gf37888676')
-    log.debug(db)
+    global service
+    service = Service(app.config.MONGO_URL, app.config.DB_NAME)
 
 
 @app.middleware('request')
@@ -45,17 +37,7 @@ async def prevent_xss(request, response):
 
 @app.get("/stat/order/list/<start:string>/<end:string>/<page:int>")
 async def order_by_duration(request, start, end, page):
-    since = datetime(1970, 1, 1, 0, 0, 0)
-    begin = (datetime.strptime(start, '%Y-%m-%d') - since).total_seconds()
-    to = (datetime.strptime(end, '%Y-%m-%d') - since).total_seconds()
-    query = {"time": {"$gte": int(begin), "$lt": int(to)}}
-    log.debug(query)
-    # docs = await db.orders.find(query).skip(16*(page-1)).limit(16)
-    docs = await db.orders.find({}).to_list(length=100)
-    log.debug(docs)
-    for doc in docs:
-        doc['id'] = str(doc['_id'])
-        del doc['_id']
+    docs = await service.find(start, end, page)
     return json(docs)
 
 
@@ -71,19 +53,25 @@ async def order_by_date(request, date, page):
 
 @app.route('/objects', methods=['GET'])
 async def get(request):
+    pass
+    '''
     docs = await db.test_col.find().to_list(length=100)
     for doc in docs:
         doc['id'] = str(doc['_id'])
         del doc['_id']
     return json(docs)
+    '''
 
 
 @app.route('/post', methods=['POST'])
 async def new(request):
+    pass
+    '''
     doc = request.json
     print(doc)
     object_id = await db.test_col.save(doc)
     return json({'object_id': str(object_id)})
+    '''
 
 
 @app.get("/ping")
