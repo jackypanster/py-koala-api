@@ -51,7 +51,7 @@ async def order_by_duration(request, start, end, page):
                 'amount': price,
             }
 
-    return json({'page': page, 'sum': items['count'], 'items': result})
+    return json({'page': page, 'sum': items['count'], 'items': result, 'start': start, 'end': end})
 
 
 @app.get("/orders/<user:string>/<start:string>/<end:string>/<page:int>")
