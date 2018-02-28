@@ -16,6 +16,15 @@ class Service:
 
         docs = await self.db.orders.find(query).skip(16*(page-1)).limit(16).to_list(length=16)
         for doc in docs:
+            del doc['id']
+            del doc['name']
+            del doc['payOption']
+            del doc['milliseconds']
             del doc['_id']
+            del doc['month']
+            del doc['status']
+            del doc['timestamp']
+            del doc['userId']
+            del doc['year']
 
         return docs
