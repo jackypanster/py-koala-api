@@ -7,6 +7,7 @@ RUN mkdir /log
 
 COPY config.py /
 COPY main.py   /
+COPY service.py /
 
 RUN pip3 install sanic
 RUN pip3 install motor
